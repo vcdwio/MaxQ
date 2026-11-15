@@ -15376,6 +15376,18 @@ window.MAXQ={
   toPad:function(){ $('start').classList.remove('gone'); },
   _onEnd:null
 };
+/* A key held while the page loses focus never sends its keyup. On a Mac,
+   Cmd+Shift+5 (screen recording) or Cmd+Tab left 'shift' stuck down: that
+   reads as "throttle up", switches the flight director off and hands the
+   rocket to the mouse - which then steers it into the air until it breaks.
+   Forget every key when the page loses focus, and ignore keys pressed
+   together with Cmd/Win: those are system shortcuts, not flight controls. */
+(function(){
+  function clearKeys(){ for(var k in keys) keys[k]=false; }
+  window.addEventListener('blur',clearKeys);
+  document.addEventListener('visibilitychange',clearKeys);
+  window.addEventListener('keydown',function(ev){ if(ev.metaKey){ clearKeys(); ev.stopImmediatePropagation(); } },true);
+})();
 
 })();
 </script>
